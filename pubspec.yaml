@@ -1,4 +1,4 @@
-name: flutter_pcm_sound_fork
+name: flutter_pcm_sound
 description: Stream real-time PCM audio (16-bit integer) at low latency
 version: 0.0.1
 homepage: https://github.com/keyur2maru/flutter_pcm_sound
