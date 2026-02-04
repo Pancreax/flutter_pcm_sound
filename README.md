@@ -1,4 +1,4 @@
-[![pub package](https://img.shields.io/pub/v/flutter_pcm_sound_fork.svg)](https://pub.dev/packages/flutter_pcm_sound_fork)
+[![pub package](https://img.shields.io/pub/v/flutter_pcm_sound.svg)](https://pub.dev/packages/flutter_pcm_sound)
 
 <p align="center">
     <img alt="Logo" src="https://github.com/keyur2maru/flutter_pcm_sound/blob/master/site/logo.png?raw=true" style="height: 300px;" />
@@ -63,7 +63,7 @@ await FlutterPcmSound.clearBuffer();
 
 ## ⭐ Stars ⭐
 
-Please star this repo & on [pub.dev](https://pub.dev/packages/flutter_pcm_sound_fork). We all benefit from having a larger community.
+Please star this repo & on [pub.dev](https://pub.dev/packages/flutter_pcm_sound). We all benefit from having a larger community.
 
 ## Acknowledgments
 

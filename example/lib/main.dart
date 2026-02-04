@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:flutter_pcm_sound_fork/flutter_pcm_sound.dart';
+import 'package:flutter_pcm_sound/flutter_pcm_sound.dart';
 
 void main() {
   runApp(const MyApp());

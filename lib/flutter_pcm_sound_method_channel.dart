@@ -1,8 +1,8 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/services.dart';
-import 'package:flutter_pcm_sound_fork/flutter_pcm_sound_platform_interface.dart';
-import 'package:flutter_pcm_sound_fork/pcm_array_int16.dart';
+import 'package:flutter_pcm_sound/flutter_pcm_sound_platform_interface.dart';
+import 'package:flutter_pcm_sound/pcm_array_int16.dart';
 
 class MethodChannelFlutterPcmSound extends FlutterPcmSoundPlatform {
   final methodChannel = const MethodChannel('flutter_pcm_sound/methods');

@@ -1,9 +1,9 @@
-import 'package:flutter_pcm_sound_fork/flutter_pcm_sound_platform_interface.dart';
-import 'package:flutter_pcm_sound_fork/pcm_array_int16.dart';
+import 'package:flutter_pcm_sound/flutter_pcm_sound_platform_interface.dart';
+import 'package:flutter_pcm_sound/pcm_array_int16.dart';
 
-export 'package:flutter_pcm_sound_fork/major_scale.dart';
-export 'package:flutter_pcm_sound_fork/flutter_pcm_sound_platform_interface.dart';
-export 'package:flutter_pcm_sound_fork/pcm_array_int16.dart';
+export 'package:flutter_pcm_sound/major_scale.dart';
+export 'package:flutter_pcm_sound/flutter_pcm_sound_platform_interface.dart';
+export 'package:flutter_pcm_sound/pcm_array_int16.dart';
 
 class FlutterPcmSound {
   static Future<void> setLogLevel(LogLevel level) {

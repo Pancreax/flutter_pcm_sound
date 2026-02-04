@@ -5,8 +5,8 @@ import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:flutter_pcm_sound_fork/flutter_pcm_sound_platform_interface.dart';
-import 'package:flutter_pcm_sound_fork/pcm_array_int16.dart';
+import 'package:flutter_pcm_sound/flutter_pcm_sound_platform_interface.dart';
+import 'package:flutter_pcm_sound/pcm_array_int16.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:web/web.dart';
 
