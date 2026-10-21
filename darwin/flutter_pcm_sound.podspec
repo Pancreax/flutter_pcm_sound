@@ -1,9 +1,9 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint flutter_pcm_sound_fork.podspec` to validate before publishing.
+# Run `pod lib lint flutter_pcm_sound.podspec` to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'flutter_pcm_sound_fork'
+  s.name             = 'flutter_pcm_sound'
   s.version          = '0.0.1'
   s.summary          = 'Flutter plugin for PCM sound'
   s.description      = 'Flutter plugin for PCM sound'
@@ -11,8 +11,8 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Chip Weinberger' => 'weinbergerc@gmail.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'flutter_pcm_sound_fork/Sources/flutter_pcm_sound_fork/**/*.{h,m}'
-  s.public_header_files = 'flutter_pcm_sound_fork/Sources/flutter_pcm_sound_fork/include/**/*.h'
+  s.source_files = 'flutter_pcm_sound/Sources/flutter_pcm_sound/**/*.{h,m}'
+  s.public_header_files = 'flutter_pcm_sound/Sources/flutter_pcm_sound/include/**/*.h'
   s.ios.dependency 'Flutter'
   s.osx.dependency 'FlutterMacOS'
   s.ios.deployment_target = '13.0'
