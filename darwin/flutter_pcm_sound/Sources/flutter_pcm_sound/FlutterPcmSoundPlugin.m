@@ -26,9 +26,6 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 @property(nonatomic) bool mDidInvokeFeedCallback; 
 @property(nonatomic) bool mDidSetup; 
 
-// We’ll track the chosen audio category to know if we should override the speaker
-@property(nonatomic, copy) NSString *chosenCategory;
-
 @end
 
 @implementation FlutterPcmSoundPlugin
@@ -69,7 +66,6 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
             NSNumber *numChannels      = args[@"num_channels"];
 #if TARGET_OS_IOS
             NSString *iosAudioCategory = args[@"ios_audio_category"];
-            self.chosenCategory = iosAudioCategory;
 #endif
 
             self.mNumChannels = [numChannels intValue];
@@ -78,6 +74,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 	        // handle background audio in iOS
             // Default to Playback if no matching case is found
             AVAudioSessionCategory category = AVAudioSessionCategoryPlayback;
+            AVAudioSessionCategoryOptions options = 0;
             if ([iosAudioCategory isEqualToString:@"ambient"]) {
                 category = AVAudioSessionCategoryAmbient;
             } else if ([iosAudioCategory isEqualToString:@"soloAmbient"]) {
@@ -86,11 +83,15 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
                 category = AVAudioSessionCategoryPlayback;
             } else if ([iosAudioCategory isEqualToString:@"playAndRecord"]) {
                 category = AVAudioSessionCategoryPlayAndRecord;
+                // In playAndRecord, iOS only offers stereo Bluetooth headphones (A2DP) as an output with
+                // AllowBluetoothA2DP, and without headphones it routes audio to the earpiece receiver;
+                // DefaultToSpeaker swaps the receiver for the speaker. Other categories already do both.
+                options = AVAudioSessionCategoryOptionAllowBluetoothA2DP | AVAudioSessionCategoryOptionDefaultToSpeaker;
             }
             
             // Set the AVAudioSession category based on the string value
             NSError *error = nil;
-            [[AVAudioSession sharedInstance] setCategory:category error:&error];
+            [[AVAudioSession sharedInstance] setCategory:category withOptions:options error:&error];
             if (error) {
                 NSLog(@"Error setting AVAudioSession category: %@", error);
                 result([FlutterError errorWithCode:@"AVAudioSessionError"
@@ -106,18 +107,6 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
                                            message:@"Error activating AVAudioSession"
                                            details:[error localizedDescription]]);
                 return;
-            }
-
-            // If using playAndRecord, ensure we don't use the earpiece:
-            // Check current route. If built-in receiver is present, override to speaker.
-            if ([iosAudioCategory isEqualToString:@"playAndRecord"]) {
-                [self ensureNotEarpiece];
-                
-                // Add observer to handle future route changes
-                [[NSNotificationCenter defaultCenter] addObserver:self
-                                                         selector:@selector(handleRouteChange:)
-                                                             name:AVAudioSessionRouteChangeNotification
-                                                           object:nil];
             }
 #endif
 
@@ -273,10 +262,6 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
 
 - (void)cleanup
 {
-#if TARGET_OS_IOS
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
-#endif
-
     if (_mAudioUnit != nil) {
         [self stopAudioUnit];
         AudioUnitUninitialize(_mAudioUnit);
@@ -314,39 +299,6 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
         }
     }
 }
-
-#if TARGET_OS_IOS
-- (void)handleRouteChange:(NSNotification *)notification {
-    [self ensureNotEarpiece];
-}
-
-- (void)ensureNotEarpiece {
-    AVAudioSessionRouteDescription *currentRoute = [AVAudioSession sharedInstance].currentRoute;
-    BOOL isEarpiece = NO;
-    for (AVAudioSessionPortDescription *output in currentRoute.outputs) {
-        // Built-in receiver is the "earpiece"
-        if ([output.portType isEqualToString:AVAudioSessionPortBuiltInReceiver]) {
-            isEarpiece = YES;
-            break;
-        }
-    }
-
-    if (isEarpiece) {
-        NSError *error = nil;
-        [[AVAudioSession sharedInstance] overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
-        if (error) {
-            NSLog(@"Error overriding to speaker: %@", error);
-        } else {
-            NSLog(@"Earpiece was selected, overriding to speaker.");
-        }
-    } else {
-        // If not using earpiece, do nothing. Headphones, AirPlay, etc. will remain as is.
-        // Also, if previously overridden, we can revert if desired:
-        // But generally, calling overrideOutputAudioPort(.none) is only needed if we previously forced the speaker.
-        // If we always force speaker only when the earpiece is chosen, we do not need to revert explicitly.
-    }
-}
-#endif
 
 static OSStatus RenderCallback(void *inRefCon,
                                AudioUnitRenderActionFlags *ioActionFlags,
